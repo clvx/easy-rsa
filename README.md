@@ -1,4 +1,4 @@
-Role Name
+EASY-RSA
 =========
 
 Ansible role to generate an OpenVPN with easy-rsa
