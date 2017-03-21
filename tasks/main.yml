@@ -1,0 +1,112 @@
+---
+
+- name: EASY-RSA - Install easy-rsa
+  apt: 
+      name: "{{ item }}"
+      state: present 
+      update_cache: yes
+  with_items: [easy-rsa, openvpn]
+  when: ansible_distribution == 'Ubuntu'
+
+- name: EASY-RSA - check dir
+  stat: 
+      path: "{{ deploy_key_dir }}"
+  register: odir
+
+- fail:
+      msg: "{{ deploy_key_dir }} MUST exist"  
+  when: not odir.stat.exists 
+
+- block:
+
+    - name: EASY-RSA - template vars.j2
+      template:
+          src: vars.j2
+          dest: "{{ easy_rsa_dir }}/vars"
+          mode: 0644
+          owner: root
+          group: root
+          backup: yes
+
+    - name: EASY-RSA - check existing PKI
+      stat:
+          path: "{{ easy_rsa_keydir }}/index.txt"
+      register: pki
+
+    - name: EASY-RSA - start over
+      shell: . ./vars && . ./clean-all 2> /dev/null
+      args:
+          chdir: "{{ easy_rsa_dir }}" 
+      when: (pki.stat.exists == False) or (easy_rsa_force_pki == True)
+
+    - name: EASY-RSA - build ca
+      shell: . ./vars && ./pkitool --initca 2> /dev/null
+      args:
+          chdir: "{{ easy_rsa_dir }}"
+          creates: "{{ easy_rsa_keydir }}/ca.key"
+
+    - name: EASY-RSA - Diffie-Hellman
+      shell: . ./vars && $OPENSSL dhparam -out ${KEY_DIR}/dh${KEY_SIZE}.pem ${KEY_SIZE} 2> /dev/null
+      args:
+          chdir: "{{ easy_rsa_dir }}"
+          creates: "{{ easy_rsa_keydir }}/dh{{ easy_rsa_key_size }}.pem"
+
+    - name: EASY-RSA - Generate CRL
+      shell: . ./vars && $OPENSSL ca -gencrl -out {{ easy_rsa_keydir }}/crl.pem -config ${KEY_CONFIG}
+      environment:
+          KEY_CN: ""
+          KEY_OU: ""
+          KEY_NAME: ""
+          KEY_ALTNAMES: ""
+      args:
+          chdir: "{{ easy_rsa_dir }}"
+          creates: "{{ easy_rsa_keydir }}/crl.pem" 
+
+    - block:
+
+        - name: EASY-RSA - build server inventory
+          shell: . ./vars && ./pkitool --server "{{ hostvars[item]['inventory_hostname'] }}" 2> /dev/null
+          args: 
+              chdir: "{{ easy_rsa_dir }}"
+              creates: "{{ easy_rsa_keydir }}/{{ hostvars[item]['inventory_hostname'] }}.csr"
+          with_items:
+              - "{{ groups['lab-servers'] }}"
+
+        - name: EASY-RSA - build clients inventory
+          shell: . ./vars && ./pkitool {{ hostvars[item]['inventory_hostname'] }} 2> /dev/null
+          args:
+              chdir: "{{ easy_rsa_dir }}"
+              creates: "{{ easy_rsa_keydir }}/{{ hostvars[item]['inventory_hostname'] }}.csr"
+          with_items:
+              - "{{ groups['lab-clients'] }}"
+
+      when: easy_rsa_inventory == True
+
+    - block:
+
+        - name: EASY-RSA - build server variable
+          shell: . ./vars && ./pkitool --server "{{ item }}" 2> /dev/null
+          args: 
+              chdir: "{{ easy_rsa_dir }}"
+              creates: "{{ easy_rsa_keydir }}/{{ item }}.csr"
+          with_items:
+              - "{{ server_list }}"
+
+        - name: EASY-RSA - build clients variable
+          shell: . ./vars && ./pkitool {{ item }} 2> /dev/null
+          args:
+              chdir: "{{ easy_rsa_dir }}"
+              creates: "{{ easy_rsa_keydir }}/{{ item }}.csr"
+          with_items:
+              - "{{ client_list }}"
+
+      when: easy_rsa_inventory == False
+
+
+    - name: EASY-RSA - HMAC signature
+      shell: openvpn --genkey --secret secret.key
+      args:
+          chdir: "{{ easy_rsa_keydir }}"
+          creates: "{{ easy_rsa_keydir }}/secret.key"
+
+  when: odir.stat.exists

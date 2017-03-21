@@ -1,0 +1,17 @@
+---
+
+deploy_key_dir: "{{ playbook_dir }}/files }}"
+easy_rsa_dir: /usr/share/easy-rsa
+easy_rsa_keydir: "{{ deploy_key_dir }}"
+easy_rsa_key_size: 2048
+easy_rsa_key_country: "PE"
+easy_rsa_key_province: "LIMA"
+easy_rsa_key_city: "LIMA"
+easy_rsa_key_org: "BAR"
+easy_rsa_key_email: "foo@example.com"
+easy_rsa_key_ou: "IT"
+easy_rsa_force_pki: "False"
+
+easy_rsa_inventory: True
+server_list: []
+client_list: []

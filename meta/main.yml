@@ -1,0 +1,22 @@
+galaxy_info:
+  author: Luis Michael Ibarra
+  description: Role to generate an openvpn pki.
+
+  license: BSD
+
+  min_ansible_version: 2.2
+
+  - name: Ubuntu
+    versions:
+    - xenial
+    - yakkety
+
+  galaxy_tags: 
+    - openvpn
+    - networking
+    - security
+    - ubuntu
+    - easy-rsa
+    - clvx
+
+dependencies: []
