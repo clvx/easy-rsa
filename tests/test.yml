@@ -1,6 +1,7 @@
 ---
 
-- hosts: localhost
+- hosts: vpn-hosts
   remote_user: root
   roles:
       - easy-rsa
+

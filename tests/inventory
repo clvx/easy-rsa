@@ -1,1 +1,9 @@
+[lab-servers]
 localhost
+
+[lab-clients]
+localhost
+
+[vpn-hosts]
+lab-servers
+lab-clients
