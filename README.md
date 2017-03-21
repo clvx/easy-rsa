@@ -1,7 +1,7 @@
 EASY-RSA
 =========
 
-Ansible role to generate an OpenVPN with easy-rsa
+Ansible role to generate an OpenVPN PKI with easy-rsa
 
 Requirements
 ------------
@@ -28,8 +28,8 @@ A description of the settable variables for this role should go here, including 
 | easy_rsa_key_ou |  "IT" | Organization Unit |
 | easy_rsa_force_pki |  "False" | If a pki exists, deletes everything and creates a new one |
 | easy_rsa_inventory |  True | Use inventory names for pki files associated with `lab-servers` and `lab-clients group` |
-| groups['lab-servers'] |  [] | When `easy_rsa_inventory` is `True`, *Inventory group* which list all servers | 
-| groups['lab-clients'] |  [] | When `easy_rsa_inventory` is `True`, *Inventory group* which list all clients | 
+| groups['lab-servers'] | your invetory servers  | When `easy_rsa_inventory` is `True`, *Inventory group* which list all servers | 
+| groups['lab-clients'] | your inventory clients  | When `easy_rsa_inventory` is `True`, *Inventory group* which list all clients | 
 | server_list |  [] | When `easy_rsa_inventory` is `False`, it will use these servers instead | 
 | client_list |  [] | When `easy_rsa_inventory` is `False`, it will use these clients instead | 
 
