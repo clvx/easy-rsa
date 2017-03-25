@@ -3,6 +3,15 @@ EASY-RSA
 
 Ansible role to generate an OpenVPN PKI with easy-rsa
 
+Future Work
+-----------
+
+- Password support for server and client keys.
+- Support to revoke|delete certificates. 
+- Support to obtain certifciates from a client CRS avoiding to generate keys in 
+a defined pki server.
+- Improve documentation, *by now check usage in .gitlab-ci.yml*
+
 Requirements
 ------------
 
