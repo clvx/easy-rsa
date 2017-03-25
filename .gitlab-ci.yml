@@ -7,10 +7,10 @@ before_script:
 test:
     script:
         - ansible-galaxy -p tests/ -r tests/requirements.yml
-        - ansible-playbook tests/yml -i tests/inventory --syntax-check
-        - ansible-playbook tests/yml -i tests/inventory --connection=local
+        - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+        - ansible-playbook tests/test.yml -i tests/inventory --connection=local
         - >
-          ansible-playbook tests/yml -i tests/inventory --connection=local
+          ansible-playbook tests/test.yml -i tests/inventory --connection=local
           | grep -q 'changed=0.*failed=0'
           && (echo 'Idempotence test: pass' && exit 0)
           || (echo 'Idempotence test: fail' && exit 1)
