@@ -18,10 +18,10 @@ test_inventory:
 test_vars:
     script:
         - ansible-galaxy install -p tests/ -r tests/requirements.yml
-        - ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory": "False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --syntax-check
-        - ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory": "False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --connection=local
+        - ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory":"False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --syntax-check
+        - ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory":"False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --connection=local
         - >
-          ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory": "False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --connection=local
+          ansible-playbook tests/test.yml -i tests/inventory --extra-vars '{"remote_host":"localhost","easy_rsa_inventory":"False","server_list":["s1","s2"],"client_list":["c1","c2"]}' --connection=local
           | grep -q 'changed=0.*failed=0'
           && (echo 'Idempotence test: pass' && exit 0)
           || (echo 'Idempotence test: fail' && exit 1)
