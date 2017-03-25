@@ -1,0 +1,16 @@
+image: ubuntu:16.04
+
+before_script:
+    - apt update && apt install python-pip libssl-dev git -y
+    - pip install ansible
+
+test:
+    script:
+        - ansible-galaxy -p tests/ -r tests/requirements.yml
+        - ansible-playbook tests/yml -i tests/inventory --syntax-check
+        - ansible-playbook tests/yml -i tests/inventory --connection=local
+        - >
+          ansible-playbook tests/yml -i tests/inventory --connection=local
+          | grep -q 'changed=0.*failed=0'
+          && (echo 'Idempotence test: pass' && exit 0)
+          || (echo 'Idempotence test: fail' && exit 1)

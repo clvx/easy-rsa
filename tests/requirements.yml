@@ -1,0 +1,6 @@
+---
+
+- src: clvx.easy-rsa
+  version: master
+  name: easy-rsa
+
