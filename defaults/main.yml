@@ -1,6 +1,6 @@
 ---
 
-deploy_key_dir: "{{ role_path }}/files "
+deploy_key_dir: "{{ role_path }}/files"
 easy_rsa_dir: /usr/share/easy-rsa
 easy_rsa_keydir: "{{ deploy_key_dir }}"
 easy_rsa_key_size: 2048
