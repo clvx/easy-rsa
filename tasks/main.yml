@@ -104,9 +104,9 @@
 
 
     - name: EASY-RSA - HMAC signature
-      shell: openvpn --genkey --secret secret.key
+      shell: openvpn --genkey --secret ta.key
       args:
           chdir: "{{ easy_rsa_keydir }}"
-          creates: "{{ easy_rsa_keydir }}/secret.key"
+          creates: "{{ easy_rsa_keydir }}/ta.key"
 
   when: odir.stat.exists
