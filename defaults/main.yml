@@ -10,7 +10,7 @@ easy_rsa_key_city: "LIMA"
 easy_rsa_key_org: "BAR"
 easy_rsa_key_email: "foo@example.com"
 easy_rsa_key_ou: "IT"
-easy_rsa_force_pki: "False"
+easy_rsa_force_pki: False
 
 easy_rsa_inventory: True
 server_list: []
